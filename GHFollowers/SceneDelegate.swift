@@ -14,9 +14,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-
-        
-        
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
@@ -34,14 +31,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func createSearchNavigationController() -> UINavigationController {
         let searchVC = SearchVC()
         searchVC.title = "Search"
-        searchVC.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 0)
+        searchVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 0)
         return UINavigationController(rootViewController: searchVC)
     }
     
     func createFacoritesNavigationController() -> UINavigationController {
         let favoritesListVC = FavoritesListVC()
         favoritesListVC.title = "Favorites"
-        favoritesListVC.tabBarItem = UITabBarItem(tabBarSystemItem:.favorites , tag: 1)
+        favoritesListVC.tabBarItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "star"), tag: 1)
         return UINavigationController(rootViewController: favoritesListVC)
     }
 
@@ -67,4 +64,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
-
