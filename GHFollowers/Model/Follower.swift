@@ -7,6 +7,7 @@
 
 import Foundation
 
+nonisolated
 
 struct Follower: Codable, Sendable, Hashable {
     var login: String

@@ -4,7 +4,7 @@ import UIKit
 class FollowerCell: UICollectionViewCell {
     static let reuseID = "FollowerCell"
     
-    let avatarImageVIew = UIImageView()
+    let avatarImageVIew = GFAvatarImageView(frame: .zero)
     let usernameLabel = GFTitleLabel(textAlignment: .center, fontSize: 16)
     
     override init(frame: CGRect) {
@@ -18,10 +18,12 @@ class FollowerCell: UICollectionViewCell {
     
     func set(follower: Follower) {
         usernameLabel.text = follower.login
+        avatarImageVIew.downloadImage(from: follower.avatarUrl)
     }
     
     private func configure() {
         addSubview(avatarImageVIew)
+        addSubview(usernameLabel)
         let padding:CGFloat = 8
 
         NSLayoutConstraint.activate([
