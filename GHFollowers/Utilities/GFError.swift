@@ -1,9 +1,3 @@
-//
-//  ErrorMessage.swift
-//  GHFollowers
-//
-//  Created by Giorgi Mekvabishvili on 20.03.26.
-//
 
 import Foundation
 
