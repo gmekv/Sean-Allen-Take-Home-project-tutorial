@@ -1,4 +1,3 @@
-
 import Foundation
 
 enum GFError: String, Error {
