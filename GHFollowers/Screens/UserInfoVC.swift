@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SafariServices
 
 protocol UserInfoVCDelegate  {
     func didTapGitHubPorfile(for user: User)
@@ -22,6 +21,7 @@ class UserInfoVC: UIViewController {
     var itemViews: [UIView] = []
     
     var username: String = ""
+    weak var delegate: FollowerListVCDelegate!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +52,7 @@ class UserInfoVC: UIViewController {
     }
     
     func configureUIElements(with user: User) {
+        let headerVC = GFUserInfoHeaderVC(user: user)
         
         let repoItemVC = GFRepoItemVC(user: user)
         repoItemVC.delegate = self
@@ -59,8 +60,9 @@ class UserInfoVC: UIViewController {
         let followerItemVC = GFFollowerItemVC(user: user)
         followerItemVC.delegate = self
         
-        self.add(childVC: repoItemVC, to: self.headerView)
-        self.add(childVC: followerItemVC, to: self.itemViewOne)
+        self.add(childVC: headerVC, to: self.headerView)
+        self.add(childVC: repoItemVC, to: self.itemViewOne)
+        self.add(childVC: followerItemVC, to: self.itemVIewTwo)
         self.datLabel.text = "On Github since \(user.createdAt.convertToDisplayFormat())"
         
     }
@@ -117,13 +119,11 @@ extension UserInfoVC: UserInfoVCDelegate {
             presentGFAlertOnMainThread(title: "Invalid URL", message: "The url atached to this user is invalid", buttonTitle: "Ok")
             return
         }
-        
-        let safariVC = SFSafariViewController(url: url)
-        safariVC.preferredControlTintColor = .systemGreen
-        present(safariVC, animated: true)
+        presentSafariVC(with: url)
     }
     
     func didTapGetFollowers(for user: User) {
-        
+        delegate.didRequestFollowers(for: user.login)
+        dismiss(animated: true)
     }
 }

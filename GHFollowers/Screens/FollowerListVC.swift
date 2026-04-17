@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol FollowerListVCDelegate: AnyObject {
+    
+    func didRequestFollowers(for username: String)
+}
+
 class FollowerListVC: UIViewController  {
     
 
@@ -33,7 +38,9 @@ class FollowerListVC: UIViewController  {
         view.backgroundColor = .systemBackground
         navigationController?.isNavigationBarHidden = false
         navigationController?.navigationBar.prefersLargeTitles = true
-
+        
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        navigationItem.rightBarButtonItem = addButton
     }
     
     func configureCollectionView() {
@@ -95,6 +102,10 @@ class FollowerListVC: UIViewController  {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+    
+    @objc func addButtonTapped() {
+        
+    }
     }
 
 
@@ -117,6 +128,7 @@ extension FollowerListVC: UICollectionViewDelegate {
         let follower  = activeArray[indexPath.item]
         let destVC = UserInfoVC()
         destVC.username = follower.login
+        destVC.delegate = self
         let navController = UINavigationController(rootViewController: destVC)
         present(navController, animated: true)
 
@@ -143,4 +155,18 @@ extension FollowerListVC: UISearchResultsUpdating, UISearchBarDelegate {
         isSearching = false
         updateData(on: followers)
      }
+}
+
+
+extension FollowerListVC: FollowerListVCDelegate {
+    func didRequestFollowers(for username: String) {
+        self.username = username
+        title = username
+        page = 1
+        followers.removeAll()
+        filteredFollowers.removeAll()
+        collectionView.setContentOffset(.zero, animated: true)
+        updateData(on: followers)
+        getFollowers(username: username, Page: page)
+    }
 }
