@@ -14,7 +14,7 @@ protocol FollowerListVCDelegate: AnyObject {
 
 class FollowerListVC: UIViewController  {
     
-
+    
     
     var username: String!
     var followers: [Follower] = []
@@ -24,7 +24,7 @@ class FollowerListVC: UIViewController  {
     var page = 1
     var hasMoreFollowers = true
     var isSearching = false
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
@@ -32,7 +32,7 @@ class FollowerListVC: UIViewController  {
         configureViewController()
         getFollowers(username: username, Page: page)
         configureDataSource()
-        }
+    }
     
     func configureViewController() {
         view.backgroundColor = .systemBackground
@@ -74,14 +74,14 @@ class FollowerListVC: UIViewController  {
                     let message = "This user does not have any followers"
                     DispatchQueue.main.async {
                         self.showEmptyStateView(with: message, in: self.view)}
-                        return
+                    return
                 }
                 self.updateData(on: self.followers)
                 
             case .failure(let error):
                 self.presentGFAlertOnMainThread(title: "Bad Stuff Happened", message: error.rawValue, buttonTitle: "Ok")
             }
-
+            
             return
         }
     }
@@ -105,19 +105,35 @@ class FollowerListVC: UIViewController  {
     
     @objc func addButtonTapped() {
         showLoadingView()
-        
+
         NetworkManager.shared.getUserInfo(for: username) { [weak self] result in
-            guard let self = self else {return}
+            guard let self = self else { return }
             self.dismissLoadingView()
+
+            switch result {
+            case .success(let user):
+                let favoriteUser = Follower(login: user.login, avatarUrl: user.avatarUrl)
+                PersistenceManager.updateWith(favorite: favoriteUser, actionType: .add) { [weak self] error in
+                    guard let self = self else {return}
+                    if let error = error {
+                        self.presentGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+                        return
+                    }
+
+                    self.presentGFAlertOnMainThread(title: "Success", message: "You have successfully favorited this user", buttonTitle: "Ok!")
+
+                }
+            case .failure(let error):
+                self.presentGFAlertOnMainThread(
+                    title: "Something went wrong",
+                    message: error.rawValue,
+                    buttonTitle: "Ok"
+                )
+            }
         }
-        switch result {
-        case .success:(let user) :
-            break
-        } case .failure: (let user):
-        self.presentGFAlertOnMainThread(title: <#T##String#>, message: <#T##String#>, buttonTitle: <#T##String#>)
-    }
     }
 
+}
 
 extension FollowerListVC: UICollectionViewDelegate {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

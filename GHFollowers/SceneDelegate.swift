@@ -15,37 +15,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = createTabbar()
+        window?.rootViewController = GFTabBarController()
         window?.makeKeyAndVisible()
+        
         configureNavigationBar()
-    }
-    
-    
-    func createTabbar() -> UITabBarController {
-        let tabbar = UITabBarController()
-        UITabBar.appearance().tintColor = .systemBlue
-        tabbar.viewControllers = [createSearchNavigationController(), createFacoritesNavigationController()]
-        return tabbar
     }
     
     func configureNavigationBar() {
         UINavigationBar.appearance().tintColor = .systemGreen
-    }
-    
-    func createSearchNavigationController() -> UINavigationController {
-        let searchVC = SearchVC()
-        searchVC.title = "Search"
-        searchVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 0)
-        return UINavigationController(rootViewController: searchVC)
-    }
-    
-    func createFacoritesNavigationController() -> UINavigationController {
-        let favoritesListVC = FavoritesListVC()
-        favoritesListVC.title = "Favorites"
-        favoritesListVC.tabBarItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "star"), tag: 1)
-        return UINavigationController(rootViewController: favoritesListVC)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
